@@ -12,7 +12,9 @@ class ClickGame extends React.Component {
   };
 
   setTopScore = () => {
+      if(this.state.currentScore >= this.state.topScore){
      this.setState({ topScore: this.state.currentScore });
+      }
   };
 
   iterateCurrentScore = () => {
@@ -37,8 +39,15 @@ class ClickGame extends React.Component {
     this.setState({ images: newImages });
   };
 
-  compareSelection = () => {
-      //this is for is the clicked on thing in the selectedImages array
+  compareSelection = (event) => {
+      if(this.selectedFriends.indexOf(event.target.href)){
+        this.iterateCurrentScore();
+        this.setTopScore();
+        this.setRandomOrder();
+      }else{
+        this.resetCurrentScoreAndEmptySelectedImagesArray();
+        this.setRandomOrder();
+      }
   }
 
   componentDidMount = () => {
@@ -50,16 +59,11 @@ class ClickGame extends React.Component {
   // The render method returns the JSX that should be rendered
   render() {
     return (
-      <div className="card text-center">
-        <div className="card-header bg-primary text-white">
-          Click Counter!
-        </div>
-        <CardBody
-          count={this.state.count}
-          handleIncrement={this.handleIncrement}
-          handleDecrement={this.handleDecrement}
-        />
-      </div>
+    <div className="container">
+      <div className="row">
+        {this.state.images.map(elem => {return (<GameCard href={elem}></GameCard>);}
+        )}
+      </div></div>
     );
   }
 }
