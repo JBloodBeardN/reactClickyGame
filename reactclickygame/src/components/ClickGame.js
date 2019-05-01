@@ -7,23 +7,26 @@ class ClickGame extends React.Component {
   state = {
     topScore: 0,
     currentScore: 0,
-    images: ["https://via.placeholder.com/200x200?text=firstImage #1", "https://via.placeholder.com/200x200?text=secondImage #2","https://via.placeholder.com/200x200?text=thirdImage #3","https://via.placeholder.com/200x200?text=fourthImage #4",],
+    images: ["https://via.placeholder.com/200x200?text=firstImage", "https://via.placeholder.com/200x200?text=secondImage","https://via.placeholder.com/200x200?text=thirdImage","https://via.placeholder.com/200x200?text=fourthImage",],
     selectedImages:[]
   };
 
-  setTopScore = () => {
+  setTopScore = (cb) => {
       if(this.state.currentScore >= this.state.topScore){
      this.setState({ topScore: this.state.currentScore });
       }
+      cb();
   };
 
-  iterateCurrentScore = () => {
+  iterateCurrentScore = (cb) => {
      this.setState({ currentScore: this.state.currentScore + 1 });
+     cb();
   };
 
-  resetCurrentScoreAndEmptySelectedImagesArray = () => {
+  resetCurrentScoreAndEmptySelectedImagesArray = (cb) => {
      this.setState({ currentScore: 0});
      this.setState({selectedImages: []});
+     cb();
   };
 
   setRandomOrder = () => {
@@ -40,13 +43,13 @@ class ClickGame extends React.Component {
   };
 
   compareSelection = (event) => {
-      if(this.selectedFriends.indexOf(event.target.href)){
-        this.iterateCurrentScore();
-        this.setTopScore();
-        this.setRandomOrder();
+      console.log(event.target);
+      console.log(this.state.selectedImages);
+      if(this.state.selectedImages.indexOf(event.target.src)){
+        this.iterateCurrentScore(this.setTopScore(this.setRandomOrder()));      
       }else{
-        this.resetCurrentScoreAndEmptySelectedImagesArray();
-        this.setRandomOrder();
+        this.resetCurrentScoreAndEmptySelectedImagesArray(this.setRandomOrder());
+        
       }
   }
 
@@ -60,8 +63,10 @@ class ClickGame extends React.Component {
   render() {
     return (
     <div className="container">
+    <h1>This is a title on ClickGame</h1>
       <div className="row">
-        {this.state.images.map(elem => {return (<GameCard href={elem}></GameCard>);}
+        {this.state.images.map(elem => {
+            return (<GameCard compareSelection={this.compareSelection} href={elem}></GameCard>);}
         )}
       </div></div>
     );
